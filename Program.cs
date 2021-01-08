@@ -8,17 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace csharpi
-{
-    public class Program
-    {
+namespace csharpi {
+    public class Program {
         private DiscordSocketClient _client;
 
         public static void Main(string[] args)
             => new Program().MainAsync().GetAwaiter().GetResult();
 
-        public async Task MainAsync()
-        {
+        public async Task MainAsync() {
             _client = new DiscordSocketClient();
             _client.Log += Log;
 
@@ -40,33 +37,26 @@ namespace csharpi
         }
 
 
-        private async Task DigestMessage(SocketMessage mes)
-        {
+        private async Task DigestMessage(SocketMessage mes) {
             // ensures we don't process system/other bot messages
-            if (!(mes is SocketUserMessage message))
-            {
+            if (!(mes is SocketUserMessage message)) {
                 return;
             }
 
-            if (mes.Source != MessageSource.User)
-            {
+            if (mes.Source != MessageSource.User) {
                 return;
             }
 
-            if (mes.Author.Id == 796478634725867601)
-            {
+            if (mes.Author.Id == 796478634725867601) {
                 await Commands.PatMessage(mes);
-            }
-            else if (mes.Content[0] == '+')
-            {
+            } else if (mes.Content[0] == '+') {
                 await Commands.DigestCommmand(mes);
             } else {
                 await Commands.DigestNormal(mes);
             }
         }
 
-        private Task Log(LogMessage msg)
-        {
+        private Task Log(LogMessage msg) {
             Console.WriteLine(msg.ToString());
             return Task.CompletedTask;
         }
