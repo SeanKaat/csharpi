@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.RegularExpressions;
 
 namespace csharpi {
     public class Commands {
@@ -23,6 +24,14 @@ namespace csharpi {
             } else if (message.Content.IndexOf("shame") != -1 && message.MentionedUsers.Count > 0) {
                 string s = (message.MentionedUsers.Count > 1 ? "All y'all been shamed now" : "you have been shamed");
                 await message.Channel.SendMessageAsync(s);
+            } else if (message.Content.IndexOf("whoasked?") >= 0) {
+                try {
+                    await message.DeleteAsync();
+
+                } catch (System.Exception e) {
+                    System.Console.WriteLine(e.Message);
+                }
+                await message.Channel.SendMessageAsync("Did I ask? Did you ask? Did he/she/we ask? Nope. Literally no one asked.");
             }
 
             // await message.DeleteAsync();
@@ -31,14 +40,24 @@ namespace csharpi {
 
         public static async Task DigestNormal(SocketMessage message) {
             //normal message
-            
+            if (ContainsFilters(message.Content, "shit|Shit|fuck|Fuck|ass|Ass|damn|Damn")) {
+                try {
+                    await message.DeleteAsync();
+
+                } catch (System.Exception e) {
+                    System.Console.WriteLine(e.Message);
+                }
+                await message.Channel.SendMessageAsync(message.Author.Username + " is big gay, and most likely has a micropenis (seanbot does not approve of profanity)");
+            } else if (ContainsFilters(message.Content, "sean|Sean")) {
+                await message.Channel.SendMessageAsync(getSeanReponse(message.Author.ToString()));
+            }
         }
 
 
         public static async Task PatMessage(SocketMessage message) {
             await message.Channel.SendMessageAsync(getPatResponse());
             await message.AddReactionAsync(new Emoji("\u267F"));
-            await message.AddReactionAsync(new Emoji("\uD83C\uDF08")); 
+            await message.AddReactionAsync(new Emoji("\uD83C\uDF08"));
         }
 
         private static string getPatResponse() {
@@ -53,6 +72,19 @@ namespace csharpi {
             }
 
             return choices[new Random().Next(0, choices.Length)];
+        }
+
+        private static string getSeanReponse(string username) {
+            //below -20
+            var choices = new[] {
+                "Did I give you permission to say my master's name? I did not",
+                "ERROR: '" + username + ".brain.exe has stopped working'. CAUSE: 'unworthy reference to my master's name'"
+            };
+            return choices[new Random().Next(0, choices.Length)];
+        }
+
+        private static bool ContainsFilters(string inputWords, string wordFilter) {
+            return new Regex(wordFilter).IsMatch(inputWords);
         }
     }
 }
