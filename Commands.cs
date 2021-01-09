@@ -31,8 +31,12 @@ namespace csharpi {
                 } catch (System.Exception e) {
                     System.Console.WriteLine(e.Message);
                 }
-                patLevel++;
-                await message.Channel.SendMessageAsync("Pat is now at " + patLevel + " due to: " + message.Author.Username);
+                if (patLevel > 60) {
+                    await message.Channel.SendMessageAsync("Pat has been good. Very good. In fact, I didn't think that he would possibly get to this point, so I didn't code anything above this. Congrats");
+                } else {
+                    await message.Channel.SendMessageAsync("Pat is now at " + (++patLevel) + " due to: " + message.Author.Username);
+                }
+
             } else if (message.Content.IndexOf("shame") != -1 && message.MentionedUsers.Count > 0) {
                 
                 string s = (message.MentionedUsers.Count > 1 ? "All y'all been shamed now" : "you have been shamed");
