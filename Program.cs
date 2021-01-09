@@ -47,7 +47,7 @@ namespace csharpi {
                 return;
             }
 
-            if (mes.Author.Id == 796478634725867601) {
+            if (mes.Author.Id == 361263102203002881) {
                 await Commands.PatMessage(mes);
             } else if (mes.Content[0] == '+') {
                 await Commands.DigestCommmand(mes);
