@@ -16,12 +16,25 @@ namespace csharpi {
 
         public static async Task DigestCommmand(SocketMessage message) {
             if (message.Content.IndexOf("patdown") != -1) {
+                try {
+                    await message.DeleteAsync();
+
+                } catch (System.Exception e) {
+                    System.Console.WriteLine(e.Message);
+                }
                 patLevel--;
-                await message.Channel.SendMessageAsync("Pat is now at " + patLevel);
+                await message.Channel.SendMessageAsync("Pat is now at " + patLevel + " due to: " + message.Author.Username);
             } else if (message.Content.IndexOf("patup") != -1) {
+                try {
+                    await message.DeleteAsync();
+
+                } catch (System.Exception e) {
+                    System.Console.WriteLine(e.Message);
+                }
                 patLevel++;
-                await message.Channel.SendMessageAsync("Pat is now at " + patLevel);
+                await message.Channel.SendMessageAsync("Pat is now at " + patLevel + " due to: " + message.Author.Username);
             } else if (message.Content.IndexOf("shame") != -1 && message.MentionedUsers.Count > 0) {
+                
                 string s = (message.MentionedUsers.Count > 1 ? "All y'all been shamed now" : "you have been shamed");
                 await message.Channel.SendMessageAsync(s);
             } else if (message.Content.IndexOf("whoasked?") >= 0) {
